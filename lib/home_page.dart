@@ -1,39 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/main.dart';
+import 'package:weather_app/routing.dart';
 
 import 'circle_tab_indicator.dart';
 import 'hour_weather_tile.dart';
 
 enum MenuOption { manageCity }
 
-class HomePage extends Page {
-  final ValueChanged<String> onTapped;
-  final LinearGradient backgroundGradient;
-
-  HomePage({required this.onTapped, required this.backgroundGradient})
-      : super(key: ValueKey('Home'));
-
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) => HomeScreen(
-        backgroundGradient: backgroundGradient,
-        onTapped: onTapped,
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
+class HomePage extends StatelessWidget {
   final ValueChanged<String>? onTapped;
   final LinearGradient backgroundGradient;
 
-  const HomeScreen({
+  const HomePage({
     Key? key,
     this.onTapped,
     required this.backgroundGradient,
   }) : super(key: key);
+
+  PageRoute get route => MaterialPageRoute(
+        builder: (context) => HomePage(
+          backgroundGradient: backgroundGradient,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +44,7 @@ class HomeScreen extends StatelessWidget {
               onSelected: (value) {
                 switch (value) {
                   case MenuOption.manageCity:
-                    if (onTapped != null) onTapped!(Routes.manageCity);
-                    // Navigator.of(context).push(ManageCityPage.route());
+                    Navigator.of(context).pushNamed(Routes.manageCity);
                     break;
                   default:
                     break;

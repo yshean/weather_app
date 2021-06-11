@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 
-class UnknownPage extends Page {
-  UnknownPage() : super(key: ValueKey('ManageCity'));
+class UnknownPage extends StatelessWidget {
+  const UnknownPage({Key? key}) : super(key: key);
 
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) => UnknownScreen(),
-    );
-  }
-}
-
-class UnknownScreen extends StatelessWidget {
-  const UnknownScreen({Key? key}) : super(key: key);
+  static PageRoute get route =>
+      MaterialPageRoute(builder: (context) => const UnknownPage());
 
   @override
   Widget build(BuildContext context) {

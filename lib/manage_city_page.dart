@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ManageCityPage extends Page {
-  ManageCityPage() : super(key: ValueKey('ManageCity'));
+class ManageCityPage extends StatelessWidget {
+  const ManageCityPage({Key? key}) : super(key: key);
 
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) => ManageCityScreen(),
-    );
-  }
-}
-
-class ManageCityScreen extends StatelessWidget {
-  const ManageCityScreen({Key? key}) : super(key: key);
+  static PageRoute get route =>
+      MaterialPageRoute(builder: (context) => const ManageCityPage());
 
   @override
   Widget build(BuildContext context) {
