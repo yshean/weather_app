@@ -6,7 +6,7 @@ class HourWeather {
   final int temperature;
   final String weatherDescription;
 
-  HourWeather({
+  const HourWeather({
     required this.hour,
     required this.weatherType,
     required this.temperature,

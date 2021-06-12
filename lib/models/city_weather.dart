@@ -6,7 +6,7 @@ class CityWeather {
   final WeatherType weatherType;
   final String weatherDescription;
 
-  CityWeather({
+  const CityWeather({
     required this.cityName,
     required this.temperature,
     required this.weatherType,

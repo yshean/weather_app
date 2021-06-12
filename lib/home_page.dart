@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/action_button.dart';
+import 'package:weather_app/hour_weather_tile.dart';
 import 'package:weather_app/models/city_weather.dart';
 import 'package:weather_app/models/enums.dart';
 
 import 'circle_tab_indicator.dart';
-import 'hour_weather_tile.dart';
 import 'models/hour_weather.dart';
 import 'routing.dart';
 
 enum MenuOption { manageCity }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final ValueChanged<String>? onTapped;
   final LinearGradient backgroundGradient;
   final CityWeather? cityWeather;
@@ -30,11 +31,18 @@ class HomePage extends StatelessWidget {
       );
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool isTodaySelected = true;
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: BoxDecoration(gradient: backgroundGradient),
-      child: cityWeather == null
+      decoration: BoxDecoration(gradient: widget.backgroundGradient),
+      child: widget.cityWeather == null
           ? Scaffold(
               backgroundColor: Colors.transparent,
               appBar: AppBar(
@@ -92,7 +100,7 @@ class HomePage extends StatelessWidget {
               backgroundColor: Colors.transparent,
               appBar: AppBar(
                 title: Text(
-                  cityWeather!.cityName.toUpperCase(),
+                  widget.cityWeather!.cityName.toUpperCase(),
                   style: TextStyle(
                     letterSpacing: 3.0,
                     fontWeight: FontWeight.bold,
@@ -128,30 +136,36 @@ class HomePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                cityWeather!.weatherDescription,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  fontSize: 24.0,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.cityWeather!.weatherDescription,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    fontSize: 24.0,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 6.0),
-                              Text(
-                                DateTime.now().toLocal().toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.white,
-                                  fontSize: 16.0,
+                                SizedBox(height: 6.0),
+                                Text(
+                                  // 'dasadsfdsfsfdfsfdfdssddsadsadasdas',
+                                  // overflow: TextOverflow.ellipsis,
+                                  // https://stackoverflow.com/questions/16126579/how-do-i-format-a-date-with-dart
+                                  DateFormat('EEEE, d MMMM')
+                                      .format(DateTime.now()),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           Text(
-                            '${cityWeather!.temperature}°',
+                            '${widget.cityWeather!.temperature}°',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -201,22 +215,55 @@ class HomePage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      Container(
-                        height: 200,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            HourWeatherTile(
-                              hourWeather: HourWeather(
-                                hour: '01:00',
-                                temperature: 37,
-                                weatherDescription: 'Mostly Sunny',
-                                weatherType: WeatherType.sunny,
+                            SizedBox(height: 16.0),
+                            FutureBuilder<List<HourWeather>>(
+                              future: Future<List<HourWeather>>.delayed(
+                                Duration(seconds: 3),
+                                () => [
+                                  HourWeather(
+                                    hour: '01:00',
+                                    temperature: 37,
+                                    weatherDescription: 'Mostly Sunny',
+                                    weatherType: WeatherType.sunny,
+                                  ),
+                                  HourWeather(
+                                    hour: '02:00',
+                                    temperature: 34,
+                                    weatherDescription: 'Partly Cloudy',
+                                    weatherType: WeatherType.cloudy,
+                                  ),
+                                  HourWeather(
+                                    hour: '03:00',
+                                    temperature: 32,
+                                    weatherDescription: 'Foggy',
+                                    weatherType: WeatherType.sunnyWithCloud,
+                                  ),
+                                  HourWeather(
+                                    hour: '04:00',
+                                    temperature: 26,
+                                    weatherDescription: 'Mostly Sunny',
+                                    weatherType: WeatherType.sunny,
+                                  ),
+                                ],
                               ),
+                              builder: (_, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Container(
+                                    height: 200,
+                                    child: ListView.separated(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (_, index) =>
+                                          HourWeatherTile(
+                                        hourWeather: snapshot.data![index],
+                                      ),
+                                      separatorBuilder: (_, __) =>
+                                          SizedBox(width: 12.0),
+                                      itemCount: snapshot.data?.length ?? 0,
+                                    ),
+                                  );
+                                }
+                                return CircularProgressIndicator();
+                              },
                             ),
                           ],
                         ),

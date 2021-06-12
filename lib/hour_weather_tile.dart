@@ -16,6 +16,7 @@ class HourWeatherTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 100,
+      padding: EdgeInsets.all(14.0),
       decoration: BoxDecoration(
         gradient: tileGradient,
         borderRadius: BorderRadius.circular(20),
@@ -26,7 +27,7 @@ class HourWeatherTile extends StatelessWidget {
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             hourWeather.hour,
