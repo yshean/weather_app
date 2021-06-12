@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Select a city in Manage City to get started',
+                    'Select a city in Manage City to view the weather',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
