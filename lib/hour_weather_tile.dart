@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/utils.dart';
+
+import 'constants.dart';
+import 'models/hour_weather.dart';
 
 class HourWeatherTile extends StatelessWidget {
-  static const tileGradient = LinearGradient(
-    colors: [
-      Colors.white,
-      Colors.white70,
-      Colors.white,
-    ],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
+  final HourWeather hourWeather;
+
+  const HourWeatherTile({
+    Key? key,
+    required this.hourWeather,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +29,15 @@ class HourWeatherTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            '01:00',
+            hourWeather.hour,
             style: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
             ),
           ),
-          Image.asset('assets/images/sun.png'),
+          Image.asset(getWeatherIconPath(hourWeather.weatherType)),
           Text(
-            'Mostly Sunny',
+            hourWeather.weatherDescription,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -44,7 +45,7 @@ class HourWeatherTile extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Text(
-            '37°',
+            '${hourWeather.temperature}°',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

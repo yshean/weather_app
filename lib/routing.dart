@@ -14,7 +14,12 @@ abstract class Routing {
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case Routes.home:
-        return HomePage(backgroundGradient: backgroundGradient).route;
+        final Map<String, dynamic> args =
+            settings.arguments as Map<String, dynamic>;
+        return HomePage(
+          backgroundGradient: backgroundGradient,
+          cityWeather: args['cityWeather'],
+        ).route;
       case Routes.manageCity:
         return ManageCityPage.route;
       default:

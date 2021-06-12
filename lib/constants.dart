@@ -12,3 +12,13 @@ const backgroundGradient = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
 );
+
+const tileGradient = LinearGradient(
+  colors: [
+    Colors.white,
+    Colors.white70,
+    Colors.white,
+  ],
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+);
