@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/action_button.dart';
-import 'package:weather_app/hour_weather_tile.dart';
 import 'package:weather_app/models/city_weather.dart';
-import 'package:weather_app/models/enums.dart';
 
 import 'circle_tab_indicator.dart';
+import 'hour_weather_tile.dart';
+import 'models/enums.dart';
 import 'models/hour_weather.dart';
 import 'routing.dart';
 
 enum MenuOption { manageCity }
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   final ValueChanged<String>? onTapped;
   final LinearGradient backgroundGradient;
   final CityWeather? cityWeather;
@@ -31,18 +31,11 @@ class HomePage extends StatefulWidget {
       );
 
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool isTodaySelected = true;
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: BoxDecoration(gradient: widget.backgroundGradient),
-      child: widget.cityWeather == null
+      decoration: BoxDecoration(gradient: backgroundGradient),
+      child: cityWeather == null
           ? Scaffold(
               backgroundColor: Colors.transparent,
               appBar: AppBar(
@@ -100,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.transparent,
               appBar: AppBar(
                 title: Text(
-                  widget.cityWeather!.cityName.toUpperCase(),
+                  cityWeather!.cityName.toUpperCase(),
                   style: TextStyle(
                     letterSpacing: 3.0,
                     fontWeight: FontWeight.bold,
@@ -133,6 +126,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      SizedBox(height: 80.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -141,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.cityWeather!.weatherDescription,
+                                  cityWeather!.weatherDescription,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white,
@@ -165,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            '${widget.cityWeather!.temperature}°',
+                            '${cityWeather!.temperature}°',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -174,98 +168,166 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 60.0),
+                      SizedBox(height: 80.0),
                       DefaultTabController(
                         length: 2,
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: TabBar(
-                                isScrollable: true,
-                                // indicator: BoxDecoration(
-                                //   borderRadius: BorderRadius.circular(
-                                //     25.0,
-                                //   ),
-                                //   color: Colors.green,
-                                // ),
-                                indicator: CircleTabIndicator(
-                                  color: Colors.cyan,
-                                  radius: 6.0,
+                        child: Expanded(
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: TabBar(
+                                  isScrollable: true,
+                                  // indicator: BoxDecoration(
+                                  //   borderRadius: BorderRadius.circular(
+                                  //     25.0,
+                                  //   ),
+                                  //   color: Colors.green,
+                                  // ),
+                                  indicator: CircleTabIndicator(
+                                    color: Colors.cyan,
+                                    radius: 6.0,
+                                  ),
+                                  tabs: [
+                                    Tab(
+                                      icon: Text(
+                                        'Today',
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Tab(
+                                      icon: Text(
+                                        'Tomorrow',
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                tabs: [
-                                  Tab(
-                                    icon: Text(
-                                      'Today',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Tab(
-                                    icon: Text(
-                                      'Tomorrow',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
                               ),
-                            ),
-                            SizedBox(height: 16.0),
-                            FutureBuilder<List<HourWeather>>(
-                              future: Future<List<HourWeather>>.delayed(
-                                Duration(seconds: 3),
-                                () => [
-                                  HourWeather(
-                                    hour: '01:00',
-                                    temperature: 37,
-                                    weatherDescription: 'Mostly Sunny',
-                                    weatherType: WeatherType.sunny,
-                                  ),
-                                  HourWeather(
-                                    hour: '02:00',
-                                    temperature: 34,
-                                    weatherDescription: 'Partly Cloudy',
-                                    weatherType: WeatherType.cloudy,
-                                  ),
-                                  HourWeather(
-                                    hour: '03:00',
-                                    temperature: 32,
-                                    weatherDescription: 'Foggy',
-                                    weatherType: WeatherType.sunnyWithCloud,
-                                  ),
-                                  HourWeather(
-                                    hour: '04:00',
-                                    temperature: 26,
-                                    weatherDescription: 'Mostly Sunny',
-                                    weatherType: WeatherType.sunny,
-                                  ),
-                                ],
-                              ),
-                              builder: (_, snapshot) {
-                                if (snapshot.hasData) {
-                                  return Container(
-                                    height: 200,
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (_, index) =>
-                                          HourWeatherTile(
-                                        hourWeather: snapshot.data![index],
+                              SizedBox(height: 16.0),
+                              Container(
+                                height: 200,
+                                child: TabBarView(
+                                  children: [
+                                    FutureBuilder<List<HourWeather>>(
+                                      future: Future<List<HourWeather>>.delayed(
+                                        Duration(seconds: 3),
+                                        () => [
+                                          HourWeather(
+                                            hour: '01:00',
+                                            temperature: 37,
+                                            weatherDescription: 'Mostly Sunny',
+                                            weatherType: WeatherType.sunny,
+                                          ),
+                                          HourWeather(
+                                            hour: '02:00',
+                                            temperature: 34,
+                                            weatherDescription: 'Partly Cloudy',
+                                            weatherType: WeatherType.cloudy,
+                                          ),
+                                          HourWeather(
+                                            hour: '03:00',
+                                            temperature: 32,
+                                            weatherDescription: 'Foggy',
+                                            weatherType:
+                                                WeatherType.sunnyWithCloud,
+                                          ),
+                                          HourWeather(
+                                            hour: '04:00',
+                                            temperature: 26,
+                                            weatherDescription: 'Mostly Sunny',
+                                            weatherType: WeatherType.sunny,
+                                          ),
+                                        ],
                                       ),
-                                      separatorBuilder: (_, __) =>
-                                          SizedBox(width: 12.0),
-                                      itemCount: snapshot.data?.length ?? 0,
+                                      builder: (_, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Container(
+                                            height: 200,
+                                            child: ListView.separated(
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (_, index) =>
+                                                  HourWeatherTile(
+                                                hourWeather:
+                                                    snapshot.data![index],
+                                              ),
+                                              separatorBuilder: (_, __) =>
+                                                  SizedBox(width: 12.0),
+                                              itemCount:
+                                                  snapshot.data?.length ?? 0,
+                                            ),
+                                          );
+                                        }
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
                                     ),
-                                  );
-                                }
-                                return CircularProgressIndicator();
-                              },
-                            ),
-                          ],
+                                    FutureBuilder<List<HourWeather>>(
+                                      future: Future<List<HourWeather>>.delayed(
+                                        Duration(seconds: 3),
+                                        () => [
+                                          HourWeather(
+                                            hour: '01:00',
+                                            temperature: 30,
+                                            weatherDescription: 'Mostly Sunny',
+                                            weatherType: WeatherType.sunny,
+                                          ),
+                                          HourWeather(
+                                            hour: '02:00',
+                                            temperature: 32,
+                                            weatherDescription: 'Partly Cloudy',
+                                            weatherType: WeatherType.cloudy,
+                                          ),
+                                          HourWeather(
+                                            hour: '03:00',
+                                            temperature: 34,
+                                            weatherDescription: 'Foggy',
+                                            weatherType:
+                                                WeatherType.sunnyWithCloud,
+                                          ),
+                                          HourWeather(
+                                            hour: '04:00',
+                                            temperature: 36,
+                                            weatherDescription: 'Mostly Sunny',
+                                            weatherType: WeatherType.sunny,
+                                          ),
+                                        ],
+                                      ),
+                                      builder: (_, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Container(
+                                            height: 200,
+                                            child: ListView.separated(
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (_, index) =>
+                                                  HourWeatherTile(
+                                                hourWeather:
+                                                    snapshot.data![index],
+                                              ),
+                                              separatorBuilder: (_, __) =>
+                                                  SizedBox(width: 12.0),
+                                              itemCount:
+                                                  snapshot.data?.length ?? 0,
+                                            ),
+                                          );
+                                        }
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
